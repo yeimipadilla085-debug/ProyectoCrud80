@@ -1,16 +1,14 @@
-// Importación tradicional (CommonJS)
+require("dotenv").config();          // ← al principio
+
 const express = require("express");
-
-// Creación de la aplicación
 const app = express();
-const puerto = 3333;
 
-// Endpoint raíz
+const puerto = process.env.MIPUERTO || 3333;   // ahora lee del .env
+
 app.get("/", (req, res) => {
   res.send("<h1>Api Rest Productos la 80</h1>");
 });
 
-// Escuchar
 app.listen(puerto, () => {
   console.log(`SERVIDOR: http://localhost:${puerto}`);
 });
