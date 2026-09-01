@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Laptop Lenovo",
+    "precio": 2500000,
+    "stock": 10,
+    "categoria": "Electrónica",
+    "imagen": null
+  },
+  {
+    "id": 2,
+    "nombre": "Mouse Logitech",
+    "precio": 85000,
+    "stock": 50,
+    "categoria": "Accesorios",
+    "imagen": null
+  }
+]
