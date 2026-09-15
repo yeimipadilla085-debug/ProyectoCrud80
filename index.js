@@ -12,6 +12,7 @@ const miApp = express();
 const miPuerto = process.env.MIPUERTO || 3333;
 const archivoProductos = "./datosProductos.json";
 const carpetaUploads = "./uploads";
+const jswtoken = require("jsonwebtoken");
 
 if (!fs.existsSync(carpetaUploads)) fs.mkdirSync(carpetaUploads);
 
@@ -19,6 +20,8 @@ miApp.use(express.json());
 miApp.use(registroMiddleware);
 miApp.use(autenticacion);
 miApp.use("/uploads", express.static(path.resolve(carpetaUploads)));
+
+
 
 // ---------- Multer ----------
 const tiposPermitidos = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -35,6 +38,9 @@ const upload = multer({
             : cb(new Error("Solo se permiten imágenes JPG, PNG, WEBP o GIF")),
     limits: { fileSize: 5 * 1024 * 1024 }
 });
+
+
+
 
 // ---------- Helpers ----------
 const leerProductos = () => JSON.parse(fs.readFileSync(archivoProductos, "utf-8"));
@@ -60,6 +66,10 @@ function validarProducto({ nombre, precio, stock, categoria }) {
 
     return { nombre: nombre.trim(), precio: precioNumero, stock: stockNumero, categoria: categoria.trim() };
 }
+
+
+
+
 
 // ---------- Rutas ----------
 miApp.get("/", (req, res) => res.send("<h1>API REST Productos la 80</h1>"));
@@ -160,17 +170,29 @@ miApp.delete("/api/productos/:id", (req, res) => {
 miApp.use(manejadorErrores);
 
 
+
+
 //enpoint inicio de sesión
 miApp.post("/api/login", (req, res) => {
-    const { usuario, password } = req.body;
-
-    if (usuario === process.env.USUARIO && password === process.env.PASSWORD) {
-        const token = require("jsonwebtoken").sign({ usuario }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        return res.status(200).json({ mensaje: "Inicio de sesión exitoso", token });
+   //capturar del usuario
+    const { usuario, clave } = req.body;
+    //simular datos del usuraio de una bd
+    const datoUsuario = {"usuario": "Yeimy", "clave": "1234"}
+    //validar datos del usuario
+    if (usuario !== datoUsuario.usuario || clave !== datoUsuario.clave) {
+       return res.status(400).json({ mensaje: "Usuario o clave incorrectos" });
     }
+    //generar y verificar
 
-    res.status(401).json({ mensaje: "Credenciales inválidas" });
+    const token = jswtoken.sign(
+      {usuario: usuario},
+      process.env.JWT_SECRET,
+      {expiresIn: "1h"},
+    )
+
+    res.json(token)
 });
+
 
 miApp.listen(miPuerto, () => {
     console.log(`SERVIDOR: http://localhost:${miPuerto}`);
