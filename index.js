@@ -4,9 +4,9 @@ const express = require("express");
 const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
-const registroMiddleware  = require("./middleware/registroMiddleware") 
-const manejadorErrores = require ("./middleware/manejadorErrores.js")
-const autenticacion = require ("./middleware/autenticacion.js")
+const registroMiddleware  = require("./src/middleware/registroMiddleware") 
+const manejadorErrores = require ("./src/middleware/manejadorErrores.js")
+const autenticacion = require ("./src/middleware/autenticacion.js")
 
 const miApp = express();
 
